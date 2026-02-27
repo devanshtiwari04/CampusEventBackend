@@ -44,8 +44,14 @@ public class RegistrationController {
         return ResponseEntity.ok(pending);
     }
     @PostMapping("/register")
-    public ResponseEntity<?> registerForEvent(@RequestParam Long userId,
-                                              @RequestParam Long eventId) {
+    public ResponseEntity<?> registerForEvent(@RequestBody Registration request) {
+
+        if (request.getUser() == null || request.getEvent() == null) {
+            return ResponseEntity.badRequest().body("User and Event must be provided");
+        }
+
+        Long userId = request.getUser().getId();
+        Long eventId = request.getEvent().getId();
 
         User user = userRepository.findById(userId).orElse(null);
         Event event = eventRepository.findById(eventId).orElse(null);
